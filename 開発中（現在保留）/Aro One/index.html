@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aro One - オールインワンオフィススイート</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/document.css">
+  <link rel="stylesheet" href="css/spreadsheet.css">
+  <link rel="stylesheet" href="css/presentation.css">
+  <link rel="stylesheet" href="css/icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <!-- PDF・画像エクスポート用ライブラリ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <div class="app-logo">
+        <span class="material-icon icon-primary">apps</span>
+        <span class="logo-text">Aro One</span>
+      </div>
+      <nav class="app-menu">
+        <ul class="menu-list">
+          <li class="menu-item" data-menu="file"><span class="material-icon icon-sm">description</span>ファイル</li>
+          <li class="menu-item" data-menu="edit"><span class="material-icon icon-sm">edit</span>編集</li>
+          <li class="menu-item" data-menu="view"><span class="material-icon icon-sm">visibility</span>表示</li>
+          <li class="menu-item" data-menu="insert"><span class="material-icon icon-sm">add_box</span>挿入</li>
+          <li class="menu-item" data-menu="format"><span class="material-icon icon-sm">format_paint</span>書式</li>
+          <li class="menu-item" data-menu="tools"><span class="material-icon icon-sm">build</span>ツール</li>
+          <li class="menu-item" data-menu="help"><span class="material-icon icon-sm">help</span>ヘルプ</li>
+        </ul>
+      </nav>
+      <div class="app-controls">
+        <button id="theme-toggle" class="control-btn" title="テーマ切替"><span class="material-icon">dark_mode</span></button>
+        <button id="settings-btn" class="control-btn" title="設定"><span class="material-icon">settings</span></button>
+      </div>
+    </header>
+
+    <div class="app-toolbar">
+      <div class="toolbar-section">
+        <button class="toolbar-btn" id="new-doc-btn" title="新規文書">📄</button>
+        <button class="toolbar-btn" id="new-sheet-btn" title="新規表計算"><span class="material-icon">grid_on</span></button>
+        <button class="toolbar-btn" id="new-pres-btn" title="新規プレゼン"><span class="material-icon">slideshow</span></button>
+        <button class="toolbar-btn" id="save-btn" title="保存"><span class="material-icon">save</span></button>
+        <button class="toolbar-btn" id="open-btn" title="開く"><span class="material-icon">folder_open</span></button>
+      </div>
+      <div class="toolbar-section format-tools">
+        <select id="font-family" class="toolbar-select">
+          <option value="Noto Sans JP">Noto Sans JP</option>
+          <option value="serif">明朝体</option>
+          <option value="monospace">等幅</option>
+        </select>
+        <select id="font-size" class="toolbar-select">
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="14" selected>14</option>
+          <option value="16">16</option>
+          <option value="18">18</option>
+          <option value="24">24</option>
+          <option value="36">36</option>
+        </select>
+        <button class="toolbar-btn" id="bold-btn" title="太字"><span class="material-icon">format_bold</span></button>
+        <button class="toolbar-btn" id="italic-btn" title="斜体"><span class="material-icon">format_italic</span></button>
+        <button class="toolbar-btn" id="underline-btn" title="下線"><span class="material-icon">format_underlined</span></button>
+      </div>
+      <div class="toolbar-section align-tools">
+        <button class="toolbar-btn" id="align-left-btn" title="左揃え">⫷</button>
+        <button class="toolbar-btn" id="align-center-btn" title="中央揃え"><span class="material-icon">format_align_center</span></button>
+        <button class="toolbar-btn" id="align-right-btn" title="右揃え">⫸</button>
+      </div>
+      <!-- プレゼンテーションのツールバー -->
+      <div class="toolbar-section presentation-tools" style="display: none;">
+        <button class="toolbar-btn" id="add-slide-btn" title="スライド追加">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <line x1="12" y1="8" x2="12" y2="16" />
+            <line x1="8" y1="12" x2="16" y2="12" />
+          </svg>
+        </button>
+        <button class="toolbar-btn" id="template-btn" title="テンプレートから追加">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+        </button>
+        <button class="toolbar-btn" id="delete-slide-btn" title="スライド削除">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <line x1="8" y1="12" x2="16" y2="12" />
+          </svg>
+        </button>
+        <button class="toolbar-btn" id="slide-up-btn" title="スライドを上へ">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5l-7 7h4.5v7h5v-7H19z" />
+          </svg>
+        </button>
+        <button class="toolbar-btn" id="slide-down-btn" title="スライドを下へ">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 19l-7-7h4.5V5h5v7H19z" />
+          </svg>
+        </button>
+        <div class="toolbar-separator"></div>
+        <button id="text-box-btn" class="toolbar-btn" title="テキストボックス追加">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <line x1="7" y1="9" x2="17" y2="9" />
+            <line x1="7" y1="12" x2="17" y2="12" />
+            <line x1="7" y1="15" x2="12" y2="15" />
+          </svg>
+        </button>
+        <button id="shape-btn" class="toolbar-btn" title="図形挿入">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="5" />
+            <rect x="7" y="13" width="10" height="8" rx="1" />
+            <polygon points="20,12 17,8 23,8" />
+          </svg>
+        </button>
+        <button id="image-btn" class="toolbar-btn" title="画像挿入">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21,15 16,10 5,21" />
+          </svg>
+        </button>
+        <button id="table-btn" class="toolbar-btn" title="テーブル挿入">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <line x1="3" y1="9" x2="21" y2="9" />
+            <line x1="3" y1="15" x2="21" y2="15" />
+            <line x1="9" y1="3" x2="9" y2="21" />
+            <line x1="15" y1="3" x2="15" y2="21" />
+          </svg>
+        </button>
+        <button id="chart-btn" class="toolbar-btn" title="グラフ挿入">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+            <rect x="5" y="12" width="3" height="6" />
+            <rect x="10.5" y="8" width="3" height="10" />
+            <rect x="16" y="5" width="3" height="13" />
+          </svg>
+        </button>
+        <div class="toolbar-separator"></div>
+        <button id="align-btn" class="toolbar-btn" title="整列">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="5" width="5" height="5" rx="1" />
+            <rect x="14" y="5" width="5" height="5" rx="1" />
+            <rect x="5" y="14" width="5" height="5" rx="1" />
+            <rect x="14" y="14" width="5" height="5" rx="1" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="12" y1="3" x2="12" y2="21" />
+          </svg>
+        </button>
+        <button id="group-btn" class="toolbar-btn" title="グループ化">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="6" width="8" height="8" rx="1" />
+            <rect x="13" y="10" width="8" height="8" rx="1" />
+            <path d="M17 10V6a1 1 0 0 0-1-1H7" stroke-dasharray="2" />
+          </svg>
+        </button>
+        <button id="layer-btn" class="toolbar-btn" title="レイヤー操作">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="14" height="14" rx="1" />
+            <rect x="7" y="7" width="14" height="14" rx="1" stroke-dasharray="2" />
+          </svg>
+        </button>
+        <div class="toolbar-separator"></div>
+        <button id="background-btn" class="toolbar-btn" title="背景設定">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M3 7h18M7 3v4" />
+            <circle cx="12" cy="14" r="4" />
+          </svg>
+        </button>
+        <button id="grid-btn" class="toolbar-btn" title="グリッド表示">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <line x1="3" y1="9" x2="21" y2="9" stroke-dasharray="2" />
+            <line x1="3" y1="15" x2="21" y2="15" stroke-dasharray="2" />
+            <line x1="9" y1="3" x2="9" y2="21" stroke-dasharray="2" />
+            <line x1="15" y1="3" x2="15" y2="21" stroke-dasharray="2" />
+          </svg>
+        </button>
+        <div class="toolbar-separator"></div>
+        <button id="transition-effect-btn" class="toolbar-btn" title="切り替え効果">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="14" rx="1" />
+            <rect x="14" y="7" width="7" height="14" rx="1" />
+            <path d="M10 9l2 2-2 2M10 16l2-2-2-2" />
+          </svg>
+        </button>
+        <button id="element-animation-btn" class="toolbar-btn" title="要素アニメーション">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="7" width="14" height="10" rx="2" />
+            <path d="M9 11l3 3 3-3" />
+            <path d="M5 3c5 0 9 3 14 0M5 21c5 0 9-3 14 0" />
+          </svg>
+        </button>
+        <button id="presenter-notes-btn" class="toolbar-btn" title="発表者ノート">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <line x1="7" y1="8" x2="17" y2="8" />
+            <line x1="7" y1="12" x2="17" y2="12" />
+            <line x1="7" y1="16" x2="12" y2="16" />
+          </svg>
+        </button>
+        <div class="toolbar-separator"></div>
+        <button id="present-btn" class="toolbar-btn" title="プレゼンテーション開始">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M10 8l6 4-6 4z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="app-tabs">
+      <div class="tab active" data-tab="document"><span class="material-icon tab-icon">article</span>文書</div>
+      <div class="tab" data-tab="spreadsheet"><span class="material-icon tab-icon">grid_on</span>表計算</div>
+      <div class="tab" data-tab="presentation"><span class="material-icon tab-icon">slideshow</span>プレゼン</div>
+    </div>
+
+    <main class="app-content">
+      <div class="content-area" id="document-area">
+        <div class="document-editor" contenteditable="true">
+          <h1>新規文書</h1>
+          <p>ここに文章を入力してください。</p>
+        </div>
+      </div>
+
+      <div class="content-area hidden" id="spreadsheet-area">
+        <div class="spreadsheet-container">
+          <div class="spreadsheet-header">
+            <div class="cell header-cell"></div>
+            <div class="cell header-cell">A</div>
+            <div class="cell header-cell">B</div>
+            <div class="cell header-cell">C</div>
+            <div class="cell header-cell">D</div>
+            <div class="cell header-cell">E</div>
+            <div class="cell header-cell">F</div>
+            <div class="cell header-cell">G</div>
+            <div class="cell header-cell">H</div>
+          </div>
+          <div class="spreadsheet-body">
+            <!-- 行は JavaScript で動的に生成 -->
+          </div>
+        </div>
+      </div>
+
+      <div class="content-area hidden" id="presentation-area">
+        <div class="presentation-container">
+          <div class="slides-panel">
+            <div class="slide-thumbnail active">
+              <div class="thumbnail-content">スライド 1</div>
+            </div>
+            <button class="add-slide-btn">+ スライド追加</button>
+          </div>
+          <div class="slide-editor">
+            <div class="slide-content" contenteditable="true">
+              <h1>新規プレゼンテーション</h1>
+              <p>ここにコンテンツを追加してください</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <div class="status-bar">
+        <span class="material-icon icon-sm icon-success">check_circle</span>
+        <span class="status-text">準備完了</span>
+        <span id="word-count" class="status-item">0 単語</span>
+        <span id="char-count" class="status-item">0 文字</span>
+      </div>
+      <div class="app-info">
+        <span><span class="material-icon icon-sm">info</span> Aro One v1.0.0</span>
+        <span><span class="material-icon icon-sm">copyright</span> 2023 Aro Software Group</span>
+      </div>
+    </footer>
+
+    <!-- メニューのドロップダウン -->
+    <div class="dropdown-menu" id="file-menu">
+      <div class="menu-option" data-action="new-document">
+        <span class="menu-option-icon material-icon">article</span>
+        <span class="menu-option-text">新規文書</span>
+        <span class="menu-option-shortcut">Ctrl+N</span>
+      </div>
+      <div class="menu-option" data-action="new-spreadsheet">
+        <span class="menu-option-icon material-icon">grid_on</span>
+        <span class="menu-option-text">新規表計算</span>
+        <span class="menu-option-shortcut">Ctrl+Shift+S</span>
+      </div>
+      <div class="menu-option" data-action="new-presentation">
+        <span class="menu-option-icon material-icon">slideshow</span>
+        <span class="menu-option-text">新規プレゼン</span>
+        <span class="menu-option-shortcut">Ctrl+Shift+P</span>
+      </div>
+      <div class="menu-separator"></div>
+      <div class="menu-option" data-action="open">
+        <span class="menu-option-icon material-icon">folder_open</span>
+        <span class="menu-option-text">開く...</span>
+        <span class="menu-option-shortcut">Ctrl+O</span>
+      </div>
+      <div class="menu-option" data-action="import-csv">
+        <span class="menu-option-icon material-icon">table_chart</span>
+        <span class="menu-option-text">CSVインポート...</span>
+      </div>
+      <div class="menu-option" data-action="save">
+        <span class="menu-option-icon material-icon">save</span>
+        <span class="menu-option-text">保存</span>
+        <span class="menu-option-shortcut">Ctrl+S</span>
+      </div>
+      <div class="menu-option" data-action="save-as">
+        <span class="menu-option-icon material-icon">save_as</span>
+        <span class="menu-option-text">名前を付けて保存...</span>
+        <span class="menu-option-shortcut">Ctrl+Shift+S</span>
+      </div>
+      <div class="menu-separator"></div>
+      <div class="menu-option" data-action="export-pdf">
+        <span class="menu-option-icon material-icon">picture_as_pdf</span>
+        <span class="menu-option-text">PDFとしてエクスポート</span>
+      </div>
+      <div class="menu-option" data-action="export-png">
+        <span class="menu-option-icon material-icon">image</span>
+        <span class="menu-option-text">PNG画像としてエクスポート</span>
+      </div>
+      <div class="menu-option" data-action="export-jpg">
+        <span class="menu-option-icon material-icon">image</span>
+        <span class="menu-option-text">JPG画像としてエクスポート</span>
+      </div>
+      <div class="menu-separator"></div>
+      <div class="menu-option" data-action="exit">
+        <span class="menu-option-icon material-icon">exit_to_app</span>
+        <span class="menu-option-text">終了</span>
+        <span class="menu-option-shortcut">Alt+F4</span>
+      </div>
+    </div>
+
+    <div class="dropdown-menu" id="edit-menu">
+      <div class="menu-option" data-action="undo">
+        <span class="menu-option-icon material-icon">undo</span>
+        <span class="menu-option-text">元に戻す</span>
+        <span class="menu-option-shortcut">Ctrl+Z</span>
+      </div>
+      <div class="menu-option" data-action="redo">
+        <span class="menu-option-icon material-icon">redo</span>
+        <span class="menu-option-text">やり直し</span>
+        <span class="menu-option-shortcut">Ctrl+Y</span>
+      </div>
+      <div class="menu-separator"></div>
+      <div class="menu-option" data-action="cut">
+        <span class="menu-option-icon material-icon">content_cut</span>
+        <span class="menu-option-text">切り取り</span>
+        <span class="menu-option-shortcut">Ctrl+X</span>
+      </div>
+      <div class="menu-option" data-action="copy">
+        <span class="menu-option-icon material-icon">content_copy</span>
+        <span class="menu-option-text">コピー</span>
+        <span class="menu-option-shortcut">Ctrl+C</span>
+      </div>
+      <div class="menu-option" data-action="paste">
+        <span class="menu-option-icon material-icon">content_paste</span>
+        <span class="menu-option-text">貼り付け</span>
+        <span class="menu-option-shortcut">Ctrl+V</span>
+      </div>
+      <div class="menu-separator"></div>
+      <div class="menu-option" data-action="select-all">
+        <span class="menu-option-icon material-icon">select_all</span>
+        <span class="menu-option-text">すべて選択</span>
+        <span class="menu-option-shortcut">Ctrl+A</span>
+      </div>
+      <div class="menu-option" data-action="find">
+        <span class="menu-option-icon material-icon">search</span>
+        <span class="menu-option-text">検索...</span>
+        <span class="menu-option-shortcut">Ctrl+F</span>
+      </div>
+      <div class="menu-option" data-action="replace">
+        <span class="menu-option-icon material-icon">find_replace</span>
+        <span class="menu-option-text">置換...</span>
+        <span class="menu-option-shortcut">Ctrl+H</span>
+      </div>
+    </div>
+
+    <!-- 表示メニュー -->
+    <div class="dropdown-menu" id="view-menu">
+      <div class="menu-option" data-action="zoom-in">
+        <span class="menu-option-icon material-icon">zoom_in</span>
+        <span class="menu-option-text">拡大</span>
+        <span class="menu-option-shortcut">Ctrl++</span>
+      </div>
+      <div class="menu-option" data-action="zoom-out">
+        <span class="menu-option-icon material-icon">zoom_out</span>
+        <span class="menu-option-text">縮小</span>
+        <span class="menu-option-shortcut">Ctrl+-</span>
+      </div>
+      <div class="menu-option" data-action="zoom-reset">
+        <span class="menu-option-icon material-icon">zoom_out_map</span>
+        <span class="menu-option-text">ズームリセット</span>
+        <span class="menu-option-shortcut">Ctrl+0</span>
+      </div>
+      <div class="menu-separator"></div>
+      <div class="menu-option" data-action="fullscreen">
+        <span class="menu-option-icon material-icon">fullscreen</span>
+        <span class="menu-option-text">全画面表示</span>
+        <span class="menu-option-shortcut">F11</span>
+      </div>
+    </div>
+
+    <!-- 挿入メニュー -->
+    <div class="dropdown-menu" id="insert-menu">
+      <div class="menu-option" data-action="insert-image">
+        <span class="menu-option-icon material-icon">image</span>
+        <span class="menu-option-text">画像</span>
+        <span class="menu-option-shortcut">Ctrl+Shift+I</span>
+      </div>
+      <div class="menu-option" data-action="insert-table">
+        <span class="menu-option-icon material-icon">table_chart</span>
+        <span class="menu-option-text">表</span>
+        <span class="menu-option-shortcut">Ctrl+Shift+T</span>
+      </div>
+      <div class="menu-option" data-action="insert-link">
+        <span class="menu-option-icon material-icon">link</span>
+        <span class="menu-option-text">リンク</span>
+        <span class="menu-option-shortcut">Ctrl+K</span>
+      </div>
+      <div class="menu-separator"></div>
+      <div class="menu-option" data-action="insert-toc">
+        <span class="menu-option-icon material-icon">format_list_numbered</span>
+        <span class="menu-option-text">目次を生成</span>
+      </div>
+      <div class="menu-option" data-action="insert-footnote">
+        <span class="menu-option-icon material-icon">bookmark</span>
+        <span class="menu-option-text">脚注</span>
+      </div>
+      <div class="menu-option" data-action="insert-citation">
+        <span class="menu-option-icon material-icon">format_quote</span>
+        <span class="menu-option-text">引用</span>
+      </div>
+      <div class="menu-separator"></div>
+      <div class="menu-option" data-action="insert-special-char">
+        <span class="menu-option-icon material-icon">emoji_symbols</span>
+        <span class="menu-option-text">特殊文字</span>
+      </div>
+      <div class="menu-option" data-action="insert-page-break">
+        <span class="menu-option-icon material-icon">horizontal_rule</span>
+        <span class="menu-option-text">ページ区切り</span>
+      </div>
+      <div class="menu-option" data-action="insert-page-number">
+        <span class="menu-option-icon material-icon">tag</span>
+        <span class="menu-option-text">ページ番号</span>
+      </div>
+      <div class="menu-option" data-action="insert-date-time">
+        <span class="menu-option-icon material-icon">event</span>
+        <span class="menu-option-text">日付と時刻</span>
+      </div>
+    </div>
+
+    <!-- 書式メニュー -->
+    <div class="dropdown-menu" id="format-menu">
+      <div class="menu-option" data-action="format-bold">
+        <span class="menu-option-icon material-icon">format_bold</span>
+        <span class="menu-option-text">太字</span>
+        <span class="menu-option-shortcut">Ctrl+B</span>
+      </div>
+      <div class="menu-option" data-action="format-italic">
+        <span class="menu-option-icon material-icon">format_italic</span>
+        <span class="menu-option-text">斜体</span>
+        <span class="menu-option-shortcut">Ctrl+I</span>
+      </div>
+      <div class="menu-option" data-action="format-underline">
+        <span class="menu-option-icon material-icon">format_underlined</span>
+        <span class="menu-option-text">下線</span>
+        <span class="menu-option-shortcut">Ctrl+U</span>
+      </div>
+      <div class="menu-option" data-action="format-strikethrough">
+        <span class="menu-option-icon material-icon">strikethrough_s</span>
+        <span class="menu-option-text">取り消し線</span>
+        <span class="menu-option-shortcut">Ctrl+Shift+X</span>
+      </div>
+      <div class="menu-separator"></div>
+      <div class="menu-option" data-action="format-text-color">
+        <span class="menu-option-icon material-icon">format_color_text</span>
+        <span class="menu-option-text">文字の色</span>
+      </div>
+      <div class="menu-option" data-action="format-highlight">
+        <span class="menu-option-icon material-icon">format_color_fill</span>
+        <span class="menu-option-text">ハイライト</span>
+      </div>
+      <div class="menu-separator"></div>
+      <div class="menu-option" data-action="format-align-left">
+        <span class="menu-option-icon material-icon">format_align_left</span>
+        <span class="menu-option-text">左揃え</span>
+      </div>
+      <div class="menu-option" data-action="format-align-center">
+        <span class="menu-option-icon material-icon">format_align_center</span>
+        <span class="menu-option-text">中央揃え</span>
+      </div>
+      <div class="menu-option" data-action="format-align-right">
+        <span class="menu-option-icon material-icon">format_align_right</span>
+        <span class="menu-option-text">右揃え</span>
+      </div>
+      <div class="menu-option" data-action="format-align-justify">
+        <span class="menu-option-icon material-icon">format_align_justify</span>
+        <span class="menu-option-text">両端揃え</span>
+      </div>
+    </div>
+
+    <!-- ツールメニュー -->
+    <div class="dropdown-menu" id="tools-menu">
+      <div class="menu-option" data-action="tools-spell-check">
+        <span class="menu-option-icon material-icon">spellcheck</span>
+        <span class="menu-option-text">スペルチェック</span>
+      </div>
+      <div class="menu-option" data-action="tools-word-count">
+        <span class="menu-option-icon material-icon">numbers</span>
+        <span class="menu-option-text">文字数カウント</span>
+      </div>
+      <div class="menu-separator"></div>
+      <div class="menu-option" data-action="tools-preferences">
+        <span class="menu-option-icon material-icon">settings</span>
+        <span class="menu-option-text">設定</span>
+      </div>
+    </div>
+
+    <!-- ヘルプメニュー -->
+    <div class="dropdown-menu" id="help-menu">
+      <div class="menu-option" data-action="help-documentation">
+        <span class="menu-option-icon material-icon">menu_book</span>
+        <span class="menu-option-text">ドキュメント</span>
+        <span class="menu-option-shortcut">F1</span>
+      </div>
+      <div class="menu-option" data-action="help-keyboard-shortcuts">
+        <span class="menu-option-icon material-icon">keyboard</span>
+        <span class="menu-option-text">キーボードショートカット</span>
+      </div>
+      <div class="menu-separator"></div>
+      <div class="menu-option" data-action="help-about">
+        <span class="menu-option-icon material-icon">info</span>
+        <span class="menu-option-text">Aro Oneについて</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/document.js"></script>
+  <script src="js/spreadsheet.js"></script>
+  <script src="js/presentation.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

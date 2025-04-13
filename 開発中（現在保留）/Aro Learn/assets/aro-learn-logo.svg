@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .text { font-family: Arial, sans-serif; font-weight: bold; }
+        .primary { fill: #6366f1; }
+        .secondary { fill: #4f46e5; }
+    </style>
+    <g transform="translate(5,5)">
+        <circle class="primary" cx="15" cy="15" r="15"/>
+        <circle class="secondary" cx="15" cy="15" r="7"/>
+        <text x="40" y="20" class="text primary" font-size="20">Aro Learn</text>
+    </g>
+</svg> 

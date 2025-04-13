@@ -1,0 +1,267 @@
+/* ドキュメント関連のスタイル */
+.document-editor {
+  background-color: var(--bg-panel);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  margin: 1.5rem;
+  padding: 2rem;
+  outline: none;
+  color: var(--text-primary);
+  line-height: 1.6;
+  flex: 1;
+  overflow-y: auto;
+  transition: var(--transition);
+}
+
+/* ドキュメントのフォントサイズ */
+.document-editor {
+  font-size: var(--font-size-md);
+}
+
+/* 要素の余白 */
+.document-editor h1, 
+.document-editor h2, 
+.document-editor h3, 
+.document-editor h4, 
+.document-editor h5, 
+.document-editor h6 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.document-editor h1 {
+  font-size: var(--font-size-2xl);
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.5rem;
+}
+
+.document-editor h2 {
+  font-size: calc(var(--font-size-xl) + 0.125rem);
+}
+
+.document-editor h3 {
+  font-size: var(--font-size-xl);
+}
+
+.document-editor h4 {
+  font-size: var(--font-size-lg);
+}
+
+.document-editor h5 {
+  font-size: var(--font-size-md);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.document-editor h6 {
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.document-editor p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.document-editor ul,
+.document-editor ol {
+  margin: 0.75rem 0 1rem 1.5rem;
+}
+
+.document-editor li {
+  margin-bottom: 0.375rem;
+}
+
+.document-editor blockquote {
+  border-left: 4px solid var(--primary-light);
+  padding: 0.5rem 0 0.5rem 1rem;
+  margin: 1rem 0;
+  color: var(--text-secondary);
+  background-color: var(--bg-secondary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.document-editor code {
+  font-family: monospace;
+  background-color: var(--bg-secondary);
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9em;
+}
+
+.document-editor pre {
+  background-color: var(--bg-secondary);
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.document-editor pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+.document-editor table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.document-editor th,
+.document-editor td {
+  border: 1px solid var(--border);
+  padding: 0.625rem;
+  text-align: left;
+}
+
+.document-editor th {
+  background-color: var(--bg-secondary);
+  font-weight: 600;
+}
+
+.document-editor tr:nth-child(even) {
+  background-color: var(--bg-tertiary);
+}
+
+.document-editor a {
+  color: var(--primary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: var(--transition);
+}
+
+.document-editor a:hover {
+  border-bottom-color: var(--primary);
+}
+
+.document-editor hr {
+  border: 0;
+  height: 1px;
+  background-color: var(--border);
+  margin: 1.5rem 0;
+}
+
+.document-editor img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  display: block;
+  margin: 1rem auto;
+}
+
+/* テキストの書式 */
+.document-editor .text-bold {
+  font-weight: 700;
+}
+
+.document-editor .text-italic {
+  font-style: italic;
+}
+
+.document-editor .text-underline {
+  text-decoration: underline;
+}
+
+.document-editor .text-strike {
+  text-decoration: line-through;
+}
+
+/* 整列 */
+.document-editor .text-left {
+  text-align: left;
+}
+
+.document-editor .text-center {
+  text-align: center;
+}
+
+.document-editor .text-right {
+  text-align: right;
+}
+
+.document-editor .text-justify {
+  text-align: justify;
+}
+
+/* ページ要素 */
+.document-editor .page-break {
+  page-break-after: always;
+  height: 1px;
+  background-color: var(--border);
+  margin: 2rem 0;
+  position: relative;
+}
+
+.document-editor .page-break::after {
+  content: "改ページ";
+  position: absolute;
+  top: -0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--bg-panel);
+  padding: 0 0.5rem;
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}
+
+.document-editor .page-number {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+  text-align: center;
+  margin: 1rem 0;
+}
+
+/* 印刷プレビュー */
+@media print {
+  .document-editor {
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .document-editor .page-break {
+    page-break-after: always;
+    height: 0;
+    margin: 0;
+    background: none;
+  }
+  
+  .document-editor .page-break::after {
+    display: none;
+  }
+}
+
+/* ダークモード対応 */
+.dark-theme .document-editor {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.dark-theme .document-editor blockquote {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .document-editor {
+    padding: 1rem;
+    margin: 0.75rem;
+  }
+  
+  .document-editor h1 {
+    font-size: var(--font-size-xl);
+  }
+  
+  .document-editor h2 {
+    font-size: var(--font-size-lg);
+  }
+}

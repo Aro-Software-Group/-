@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reel Spark - 動画編集ソフト</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Reel Spark</h1>
+        </div>
+        <div class="controls">
+            <button id="newProject" class="btn"><i class="fas fa-file"></i> 新規</button>
+            <button id="openProject" class="btn"><i class="fas fa-folder-open"></i> 開く</button>
+            <button id="saveProject" class="btn"><i class="fas fa-save"></i> 保存</button>
+            <button id="exportVideo" class="btn primary"><i class="fas fa-file-export"></i> エクスポート</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="editor-container">
+            <div class="preview-panel">
+                <div class="video-container">
+                    <video id="preview" controls></video>
+                </div>
+                <div class="preview-controls">
+                    <button id="playPause" class="btn"><i class="fas fa-play"></i></button>
+                    <button id="stop" class="btn"><i class="fas fa-stop"></i></button>
+                    <div class="time-display">00:00:00 / 00:00:00</div>
+                </div>
+            </div>
+
+            <div class="tools-panel">
+                <div class="tools-section">
+                    <h3>ツール</h3>
+                    <button id="cutTool" class="tool-btn"><i class="fas fa-cut"></i> カット</button>
+                    <button id="trimTool" class="tool-btn"><i class="fas fa-scissors"></i> トリム</button>
+                    <button id="mergeTool" class="tool-btn"><i class="fas fa-link"></i> 結合</button>
+                    <button id="splitTool" class="tool-btn"><i class="fas fa-unlink"></i> 分割</button>
+                </div>
+                
+                <div class="tools-section">
+                    <h3>エフェクト</h3>
+                    <button id="brightnessEffect" class="tool-btn"><i class="fas fa-sun"></i> 明るさ</button>
+                    <button id="contrastEffect" class="tool-btn"><i class="fas fa-adjust"></i> コントラスト</button>
+                    <button id="saturationEffect" class="tool-btn"><i class="fas fa-palette"></i> 彩度</button>
+                    <button id="blurEffect" class="tool-btn"><i class="fas fa-brush"></i> ぼかし</button>
+                </div>
+                
+                <div class="tools-section">
+                    <h3>フィルター</h3>
+                    <button id="grayscaleFilter" class="tool-btn"><i class="fas fa-film"></i> グレースケール</button>
+                    <button id="sepiaFilter" class="tool-btn"><i class="fas fa-image"></i> セピア</button>
+                    <button id="invertFilter" class="tool-btn"><i class="fas fa-exchange-alt"></i> 反転</button>
+                    <button id="vintageFilter" class="tool-btn"><i class="fas fa-camera-retro"></i> ビンテージ</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-container">
+            <div class="media-library">
+                <h3>メディアライブラリ</h3>
+                <div class="upload-area">
+                    <input type="file" id="uploadMedia" accept="video/*,audio/*,image/*" multiple hidden>
+                    <button id="uploadBtn" class="btn"><i class="fas fa-upload"></i> メディアをアップロード</button>
+                </div>
+                <div id="mediaList" class="media-list"></div>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-header">
+                    <div class="time-markers"></div>
+                </div>
+                <div class="tracks-container">
+                    <div class="track" data-track="video">
+                        <div class="track-label">ビデオ</div>
+                        <div class="track-content" id="videoTrack"></div>
+                    </div>
+                    <div class="track" data-track="audio">
+                        <div class="track-label">オーディオ</div>
+                        <div class="track-content" id="audioTrack"></div>
+                    </div>
+                    <div class="track" data-track="effects">
+                        <div class="track-label">エフェクト</div>
+                        <div class="track-content" id="effectsTrack"></div>
+                    </div>
+                </div>
+                <div class="timeline-playhead"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="effectsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>エフェクト設定</h2>
+            <div class="effect-controls">
+                <!-- Dynamic content will be added here -->
+            </div>
+            <div class="modal-buttons">
+                <button id="applyEffect" class="btn primary">適用</button>
+                <button id="cancelEffect" class="btn">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>動画をエクスポート</h2>
+            <div class="export-options">
+                <div class="form-group">
+                    <label for="exportFormat">フォーマット:</label>
+                    <select id="exportFormat">
+                        <option value="mp4">MP4</option>
+                        <option value="webm">WebM</option>
+                        <option value="gif">GIF</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exportQuality">品質:</label>
+                    <select id="exportQuality">
+                        <option value="high">高品質</option>
+                        <option value="medium">中品質</option>
+                        <option value="low">低品質</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exportResolution">解像度:</label>
+                    <select id="exportResolution">
+                        <option value="original">オリジナル</option>
+                        <option value="1080p">1080p</option>
+                        <option value="720p">720p</option>
+                        <option value="480p">480p</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button id="startExport" class="btn primary">エクスポート開始</button>
+                <button id="cancelExport" class="btn">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js" type="module"></script>
+</body>
+</html>

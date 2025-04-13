@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aro Learn - AI学習支援プラットフォーム">
+    <title>Aro Learn - AI教育支援プラットフォーム</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <!-- ES Module対応 -->
+    <script type="module" src="js/main.js"></script>
+</head>
+<body class="loaded">
+    <div class="app-container">
+        <!-- サイドバー -->
+        <aside class="sidebar" aria-label="サイドナビゲーション">
+            <div class="logo-container">
+                <a href="/" class="logo" aria-label="Aro Learn ホーム">
+                    <img src="images/aro-learn-logo.svg" alt="Aro Learn" class="logo-icon" width="24" height="24">
+                    <span class="logo-text">Aro Learn</span>
+                </a>
+            </div>
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <h3 class="nav-title">
+                        <span>発見する</span>
+                    </h3>
+                    <div class="nav-item active" tabindex="0" role="button">
+                        <span class="material-icons">lightbulb</span>
+                        <span>学習のアイディアとインスピレーション</span>
+                    </div>
+                </div>
+                <div class="nav-section">
+                    <h3 class="nav-title">
+                        <span>会話</span>
+                        <button class="new-chat-btn" aria-label="新しい会話" title="新しい会話">
+                            <span class="material-icons">add</span>
+                        </button>
+                    </h3>
+                    <!-- 会話履歴リスト -->
+                    <div class="conversation-list" id="conversation-list">
+                        <!-- ここに会話リストが表示されます -->
+                        <div class="empty-conversation-state">
+                            <span>会話履歴がありません</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-section settings-section">
+                    <h3 class="nav-title">
+                        <span>設定</span>
+                    </h3>
+                    <div class="nav-item" id="api-key-settings" tabindex="0" role="button">
+                        <span class="material-icons">settings</span>
+                        <span>API設定</span>
+                    </div>
+                    <div class="nav-item" id="clear-conversations" tabindex="0" role="button">
+                        <span class="material-icons">delete_sweep</span>
+                        <span>すべての会話を削除</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- 会話メニューのコンテキストメニュー -->
+        <div class="context-menu" id="conversation-context-menu">
+            <div class="context-menu-item" id="rename-conversation">
+                <span class="material-icons">edit</span>
+                <span>会話名を変更</span>
+            </div>
+            <div class="context-menu-item delete-item" id="delete-conversation">
+                <span class="material-icons">delete</span>
+                <span>会話を削除</span>
+            </div>
+        </div>
+
+        <!-- 会話名変更モーダル -->
+        <div id="rename-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>会話名の変更</h2>
+                    <button class="close-modal" aria-label="閉じる">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="conversation-title-input">会話名</label>
+                        <input type="text" id="conversation-title-input" placeholder="会話名を入力">
+                    </div>
+                    <div class="modal-actions">
+                        <button id="save-conversation-title" class="btn primary">
+                            <span class="material-icons">save</span>
+                            <span>保存</span>
+                        </button>
+                        <button class="btn secondary close-modal">
+                            <span>キャンセル</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content" aria-label="メインコンテンツ">
+            <header class="main-header">
+                <h1>こんにちは。今日は何を学びますか？</h1>
+            </header>
+            
+            <div class="learning-cards">
+                <div class="card" tabindex="0" role="button" aria-label="誕生日カードの書き方を教えてもらう">
+                    <div class="card-image">
+                        <img src="assets/writing.jpg" alt="誕生日カードを書く手" loading="lazy">
+                    </div>
+                    <div class="card-title">
+                        誕生日カードの書き方を教えてもらう
+                    </div>
+                </div>
+
+                <div class="card" tabindex="0" role="button" aria-label="あなたが気に入る新しい本を見つける">
+                    <div class="card-image">
+                        <img src="assets/books.jpg" alt="本棚の本" loading="lazy">
+                    </div>
+                    <div class="card-title">
+                        あなたが気に入る新しい本を見つける
+                    </div>
+                </div>
+
+                <div class="card" tabindex="0" role="button" aria-label="体幹を鍛える">
+                    <div class="card-image">
+                        <img src="assets/exercise.jpg" alt="運動の様子" loading="lazy">
+                    </div>
+                    <div class="card-title">
+                        体幹を鍛える
+                    </div>
+                </div>
+            </div>
+            
+            <!-- チャットメッセージが表示される領域 -->
+            <div class="chat-messages"></div>
+            
+            <div class="chat-section">
+                <div class="chat-status">
+                    Aro Learn は間違る可能性があります。
+                </div>
+                <form class="message-input" action="#" method="post">
+                    <input type="text" placeholder="Aro Learn へメッセージを送る" aria-label="メッセージを入力">
+                    <div class="input-actions">
+                        <button type="button" class="plus-button" aria-label="ファイルを添付">
+                            <span class="material-icons" aria-hidden="true">add</span>
+                        </button>
+                        <button type="button" class="voice-button" aria-label="音声入力">
+                            <span class="material-icons" aria-hidden="true">mic</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- API Key設定モーダル -->
+            <div id="api-key-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2><span class="material-icons">settings</span> AI モデル設定</h2>
+                        <button class="close-modal" aria-label="閉じる">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>現在使用中のモデル: <span id="current-model-display">Gemini 2.0 Flash</span></p>
+                        
+                        <div class="form-group">
+                            <label for="model-selector">使用するモデルを選択</label>
+                            <select id="model-selector" class="form-control">
+                                <!-- JSで動的にモデルリストが追加されます -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="gemini-api-key-input">Gemini API Key</label>
+                            <input type="password" id="gemini-api-key-input" placeholder="Gemini API Keyを入力" autocomplete="off">
+                            <small>Geminiモデルを使用する場合に必要です</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="openrouter-api-key-input">OpenRouter API Key</label>
+                            <input type="password" id="openrouter-api-key-input" placeholder="OpenRouter API Keyを入力" autocomplete="off">
+                            <small>OpenRouterモデルを使用する場合に必要です</small>
+                        </div>
+                        
+                        <div class="modal-actions">
+                            <button id="save-api-key" class="btn primary">
+                                <span class="material-icons">save</span>
+                                <span>保存して適用</span>
+                            </button>
+                            <button class="btn secondary close-modal">
+                                <span>キャンセル</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 会話削除確認ダイアログ -->
+            <div id="clear-confirmation" class="confirmation-dialog">
+                <div class="confirmation-content">
+                    <div class="confirmation-header">
+                        <span class="material-icons">warning</span>
+                        会話履歴の削除
+                    </div>
+                    <div class="confirmation-message">
+                        すべての会話履歴を削除します。この操作は元に戻せません。本当に削除しますか？
+                    </div>
+                    <div class="confirmation-buttons">
+                        <button class="btn secondary close-confirmation">キャンセル</button>
+                        <button id="confirm-clear" class="danger-btn">
+                            <span class="material-icons">delete_forever</span>
+                            すべて削除
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1014 @@
+/* プレゼンテーション機能のスタイル */
+.presentation-container {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* スライドパネル */
+.slides-panel {
+  width: 200px;
+  background-color: #f5f5f5;
+  padding: 15px;
+  overflow-y: auto;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border-right: 1px solid #e0e0e0;
+}
+
+.slide-thumbnail {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.slide-thumbnail:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.slide-thumbnail.active {
+  border: 2px solid #4285f4;
+  transform: scale(1.05);
+}
+
+.thumbnail-content {
+  width: 100%;
+  height: 100%;
+  transform: scale(0.25);
+  transform-origin: top left;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.add-slide-btn {
+  background-color: #f1f3f4;
+  border: 1px dashed #ccc;
+  color: #666;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.add-slide-btn:hover {
+  background-color: #e8eaed;
+  color: #4285f4;
+}
+
+/* スライドエディタ */
+.slide-editor {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: auto;
+  background-color: #fafafa;
+}
+
+.slide-content {
+  width: 90%;
+  height: 90%;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  aspect-ratio: 16/9;
+  margin: 0 auto;
+  padding: 40px;
+  overflow: auto;
+  position: relative;
+}
+
+.slide-content h1 {
+  font-size: 42px;
+  margin-bottom: var(--spacing-xl);
+  color: var(--text-color);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.slide-content h2 {
+  font-size: 32px;
+  margin-bottom: var(--spacing-lg);
+  color: var(--text-color);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.slide-content p {
+  font-size: 22px;
+  margin-bottom: var(--spacing-md);
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+.slide-content ul,
+.slide-content ol {
+  margin-bottom: var(--spacing-lg);
+  padding-left: 30px;
+}
+
+.slide-content li {
+  font-size: 20px;
+  margin-bottom: var(--spacing-md);
+  line-height: 1.5;
+  position: relative;
+}
+
+.slide-content li::marker {
+  color: var(--primary-color);
+}
+
+.slide-content img {
+  max-width: 100%;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  margin: var(--spacing-md) 0;
+}
+
+.slide-content blockquote {
+  border-left: 4px solid var(--primary-color);
+  padding: var(--spacing-md) var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  font-style: italic;
+  background-color: var(--primary-color-light);
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+}
+
+/* プレゼンテーションモード */
+.presentation-mode {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.95);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s var(--transition-function);
+}
+
+.presentation-slide {
+  width: 100%;
+  max-width: 1280px;
+  height: 720px;
+  background-color: var(--card-color);
+  box-shadow: var(--shadow-xl);
+  padding: var(--spacing-xl);
+  position: relative;
+  border-radius: var(--border-radius-xl);
+  overflow: hidden;
+  animation: zoomIn 0.5s var(--transition-function);
+}
+
+.presentation-controls {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--spacing-md);
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-full);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: slideUp 0.5s var(--transition-function) 0.3s both;
+}
+
+.presentation-control-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--border-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-speed) var(--transition-function);
+  position: relative;
+  overflow: hidden;
+}
+
+.presentation-control-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius-full);
+  transform: scale(0);
+  transition: transform 0.3s var(--transition-function);
+}
+
+.presentation-control-btn:hover {
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.presentation-control-btn:hover::before {
+  transform: scale(1);
+}
+
+.presentation-control-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translate(-50%, 20px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s var(--transition-function) forwards;
+}
+
+.animate-zoom-in {
+  animation: zoomIn 0.5s var(--transition-function) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s var(--transition-function) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.5s var(--transition-function) forwards;
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.5s var(--transition-function) forwards;
+}
+
+/* スライドエディタツールバー */
+.slide-editor-toolbar {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--spacing-sm);
+  background-color: var(--surface-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-full);
+  box-shadow: var(--shadow-md);
+  z-index: 10;
+  border: 1px solid var(--border-color);
+}
+
+.slide-editor-tool {
+  background: none;
+  border: none;
+  color: var(--text-color-secondary);
+  font-size: var(--font-size-md);
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--border-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-speed) var(--transition-function);
+}
+
+.slide-editor-tool:hover {
+  background-color: var(--primary-color-light);
+  color: var(--primary-color);
+}
+
+.slide-editor-tool.active {
+  background-color: var(--primary-color-light);
+  color: var(--primary-color);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1200px) {
+  .slide-content {
+    width: 800px;
+    height: 450px;
+  }
+  
+  .toolbar-section.presentation-tools {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding-bottom: 8px;
+  }
+}
+
+@media (max-width: 992px) {
+  .slide-content {
+    width: 640px;
+    height: 360px;
+  }
+
+  .slide-content h1 {
+    font-size: 28px;
+  }
+
+  .slide-content h2 {
+    font-size: 24px;
+  }
+
+  .slide-content p,
+  .slide-content li {
+    font-size: 16px;
+  }
+  
+  .toolbar-section.presentation-tools .toolbar-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+  }
+  
+  .toolbar-section.presentation-tools .toolbar-separator {
+    height: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .presentation-container {
+    flex-direction: column;
+  }
+
+  .slides-panel {
+    width: 100%;
+    height: 120px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .slide-thumbnail {
+    width: 160px;
+    min-width: 160px;
+    height: 90px;
+  }
+
+  .add-slide-btn {
+    width: 160px;
+    min-width: 160px;
+    height: 90px;
+    margin-top: 0;
+  }
+
+  .slide-content {
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 アスペクト比 */
+  }
+  
+  .app-toolbar {
+    overflow-x: auto;
+  }
+  
+  .toolbar-section.presentation-tools {
+    padding-right: 16px; /* スクロール時に右端に余白を追加 */
+  }
+}
+
+/* 小さな画面向けの追加対応 */
+@media (max-width: 576px) {
+  .toolbar-section.presentation-tools .toolbar-btn {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+  }
+  
+  .toolbar-section.presentation-tools svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .toolbar-section.presentation-tools .toolbar-separator {
+    height: 16px;
+    margin: 0 4px;
+  }
+  
+  .dialog {
+    width: 95%;
+    max-width: 95%;
+  }
+}
+
+/* ツールバーのスクロール対応 */
+.app-toolbar {
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+.app-toolbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.app-toolbar::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.app-toolbar::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* ツールバーのスタイル */
+.toolbar-section.presentation-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+  max-width: 100%;
+  overflow-x: auto;
+  padding-bottom: 5px; /* スクロールバー用の余白 */
+}
+
+.toolbar-section.presentation-tools .toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px; /* 最小幅を設定してつぶれないようにする */
+  border-radius: 4px;
+  border: none;
+  background-color: transparent;
+  color: #444;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.toolbar-section.presentation-tools .toolbar-btn:hover {
+  background-color: #f1f3f4;
+  color: #1a73e8;
+}
+
+.toolbar-section.presentation-tools .toolbar-btn.active {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+}
+
+.toolbar-section.presentation-tools .toolbar-separator {
+  width: 1px;
+  height: 24px;
+  background-color: #ddd;
+  margin: 0 8px;
+}
+
+/* SVGアイコンのスタイル */
+.toolbar-btn svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s;
+}
+
+.toolbar-btn:hover svg {
+  transform: scale(1.1);
+}
+
+/* 編集可能な要素のスタイル */
+.slide-content [contenteditable="true"] {
+  outline: none;
+  border: 1px dashed transparent;
+  transition: border-color 0.2s;
+  padding: 5px;
+  border-radius: 2px;
+}
+
+.slide-content [contenteditable="true"]:hover {
+  border-color: #ccc;
+}
+
+.slide-content [contenteditable="true"]:focus {
+  border-color: #4285f4;
+}
+
+/* スライド要素のスタイル */
+.slide-element {
+  position: absolute;
+  cursor: move;
+  min-width: 50px;
+  min-height: 50px;
+}
+
+.slide-element.selected {
+  outline: 2px solid #4285f4;
+  resize: both;
+  overflow: auto;
+}
+
+.slide-element-resize-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border: 1px solid #4285f4;
+  z-index: 100;
+}
+
+.slide-element-resize-handle.top-left {
+  top: -5px;
+  left: -5px;
+  cursor: nwse-resize;
+}
+
+.slide-element-resize-handle.top-right {
+  top: -5px;
+  right: -5px;
+  cursor: nesw-resize;
+}
+
+.slide-element-resize-handle.bottom-left {
+  bottom: -5px;
+  left: -5px;
+  cursor: nesw-resize;
+}
+
+.slide-element-resize-handle.bottom-right {
+  bottom: -5px;
+  right: -5px;
+  cursor: nwse-resize;
+}
+
+/* テキストボックスのスタイル */
+.text-box-element {
+  padding: 10px;
+  min-width: 100px;
+  min-height: 50px;
+  outline: none;
+}
+
+/* 図形のスタイル */
+.shape-element {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shape-element.circle {
+  border-radius: 50%;
+}
+
+.shape-element.rectangle {
+  border-radius: 0;
+}
+
+.shape-element.triangle {
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 100px solid #4285f4;
+  background-color: transparent !important;
+}
+
+/* グリッドのスタイル */
+.slide-content.show-grid {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* 整列ガイドのスタイル */
+.alignment-guide {
+  position: absolute;
+  background-color: #4285f4;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.alignment-guide.vertical {
+  width: 1px;
+  height: 100%;
+  top: 0;
+}
+
+.alignment-guide.horizontal {
+  width: 100%;
+  height: 1px;
+  left: 0;
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes slideInDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-30px); }
+  60% { transform: translateY(-15px); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+  20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+/* アニメーションクラス */
+.fadeIn { animation: fadeIn 1s; }
+.slideInLeft { animation: slideInLeft 1s; }
+.slideInRight { animation: slideInRight 1s; }
+.slideInUp { animation: slideInUp 1s; }
+.slideInDown { animation: slideInDown 1s; }
+.zoomIn { animation: zoomIn 1s; }
+.bounce { animation: bounce 1s; }
+.pulse { animation: pulse 1s; }
+.shake { animation: shake 1s; }
+
+/* ダイアログのスタイル */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.dialog {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow: auto;
+  padding: 0;
+}
+
+.dialog-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+}
+
+.dialog-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.dialog-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.dialog-body {
+  padding: 20px;
+}
+
+.dialog-footer {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid #eee;
+}
+
+.dialog-btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.dialog-btn.cancel {
+  background-color: #f1f3f4;
+  color: #444;
+  border: none;
+}
+
+.dialog-btn.primary {
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+}
+
+.dialog-btn.cancel:hover {
+  background-color: #e8eaed;
+}
+
+.dialog-btn.primary:hover {
+  background-color: #1967d2;
+}
+
+/* グラフエディタのスタイル */
+.chart-preview {
+  width: 100%;
+  height: 300px;
+  margin-top: 20px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.chart-data-table th,
+.chart-data-table td {
+  border: 1px solid #eee;
+  padding: 8px;
+  text-align: left;
+}
+
+.chart-data-table th {
+  background-color: #f9f9f9;
+}
+
+.chart-data-table input {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* 背景設定パネルのスタイル */
+.background-settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.background-option {
+  height: 60px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  overflow: hidden;
+}
+
+.background-option:hover {
+  transform: scale(1.05);
+}
+
+.background-option.selected {
+  border: 2px solid #4285f4;
+}
+
+.color-picker-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* テンプレート選択のスタイル */
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.template-item {
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s;
+  aspect-ratio: 16/9;
+}
+
+.template-item:hover {
+  transform: scale(1.05);
+}
+
+.template-item.selected {
+  border: 2px solid #4285f4;
+}
+
+.template-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* プレゼンテーションモードのスタイル */
+.presentation-fullscreen-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #111;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.presentation-display {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.presentation-slide {
+  background-color: white;
+  width: 90%;
+  height: 90%;
+  max-width: 1200px;
+  max-height: 800px;
+  overflow: auto;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.presentation-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  color: white;
+  z-index: 100;
+}
+
+.presentation-nav {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px 15px;
+  border-radius: 30px;
+}
+
+.presentation-progress {
+  margin: 0 15px;
+  font-size: 14px;
+}
+
+.presentation-prev-btn, .presentation-next-btn, .presentation-exit-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px 10px;
+}
+
+.presentation-exit-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.presenter-notes-area {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 101;
+}
+
+.presenter-notes-toggle {
+  text-align: right;
+}
+
+.toggle-notes-btn {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.presenter-notes-content {
+  background-color: white;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 10px;
+  width: 300px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.presenter-notes-content h4 {
+  margin-top: 0;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+  color: #333;
+}
+
+.note-content {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #555;
+}

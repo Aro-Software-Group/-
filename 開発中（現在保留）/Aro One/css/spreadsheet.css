@@ -1,0 +1,303 @@
+/* 表計算シートのスタイル */
+.spreadsheet-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  background-color: var(--bg-panel);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  margin: 1.5rem;
+  font-size: var(--font-size-sm);
+}
+
+.spreadsheet-header {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border);
+}
+
+.spreadsheet-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.spreadsheet-row {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.spreadsheet-row:last-child {
+  border-bottom: none;
+}
+
+.spreadsheet-row:hover {
+  background-color: rgba(var(--primary-light), 0.05);
+}
+
+.cell {
+  min-width: 100px;
+  height: 32px;
+  padding: 0.25rem 0.5rem;
+  border-right: 1px solid var(--border-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  position: relative;
+  transition: var(--transition);
+}
+
+.cell:last-child {
+  border-right: none;
+}
+
+.header-cell {
+  background-color: var(--bg-tertiary);
+  font-weight: 600;
+  text-align: center;
+  justify-content: center;
+  user-select: none;
+  color: var(--text-secondary);
+}
+
+.row-header {
+  background-color: var(--bg-tertiary);
+  font-weight: 600;
+  text-align: center;
+  justify-content: center;
+  min-width: 40px;
+  width: 40px;
+  user-select: none;
+  color: var(--text-secondary);
+  position: sticky;
+  left: 0;
+  z-index: 5;
+}
+
+.cell-editable {
+  background-color: var(--bg-primary);
+}
+
+.cell-active {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+  z-index: 2;
+}
+
+.cell-selected {
+  background-color: rgba(var(--primary-light), 0.1);
+}
+
+.cell-formula {
+  color: var(--secondary);
+}
+
+.cell-error {
+  color: var(--danger);
+}
+
+.cell-readonly {
+  background-color: var(--bg-secondary);
+  color: var(--text-tertiary);
+}
+
+/* リサイズハンドル */
+.resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: col-resize;
+  z-index: 20;
+}
+
+.resize-handle:hover {
+  background-color: var(--primary);
+}
+
+/* 数値フォーマット */
+.cell-number {
+  text-align: right;
+}
+
+.cell-date {
+  color: var(--info);
+}
+
+.cell-percentage {
+  color: var(--success);
+}
+
+.cell-currency {
+  color: var(--accent);
+}
+
+/* セルのレンダリングスタイル */
+.cell-bold {
+  font-weight: 700;
+}
+
+.cell-italic {
+  font-style: italic;
+}
+
+.cell-underline {
+  text-decoration: underline;
+}
+
+/* セル編集インターフェース */
+.cell-editor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary);
+  border: 2px solid var(--primary);
+  z-index: 30;
+  outline: none;
+  padding: 0.25rem 0.5rem;
+  box-sizing: border-box;
+}
+
+/* 数式バー */
+.formula-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-secondary);
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.formula-label {
+  font-weight: 600;
+  margin-right: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.formula-input {
+  flex: 1;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: var(--transition);
+}
+
+.formula-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(var(--primary-light), 0.2);
+}
+
+/* コンテキストメニュー */
+.cell-context-menu {
+  position: absolute;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  min-width: 180px;
+}
+
+.context-menu-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+
+.context-menu-item:hover {
+  background-color: var(--bg-secondary);
+}
+
+.context-menu-separator {
+  height: 1px;
+  background-color: var(--border-light);
+  margin: 0.25rem 0;
+}
+
+/* フィルターと並べ替え */
+.cell-filter-active {
+  position: relative;
+}
+
+.cell-filter-active::after {
+  content: "🔍";
+  position: absolute;
+  right: 0.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.cell-sort-asc::after {
+  content: "↑";
+  margin-left: 0.25rem;
+  opacity: 0.7;
+}
+
+.cell-sort-desc::after {
+  content: "↓";
+  margin-left: 0.25rem;
+  opacity: 0.7;
+}
+
+/* ページネーション */
+.spreadsheet-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  border-top: 1px solid var(--border);
+  gap: 0.5rem;
+}
+
+.pagination-btn {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-primary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.pagination-btn:hover:not(.pagination-active) {
+  background-color: var(--bg-secondary);
+}
+
+.pagination-active {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .spreadsheet-container {
+    margin: 0.75rem;
+  }
+  
+  .cell {
+    min-width: 80px;
+    height: 28px;
+    padding: 0.125rem 0.25rem;
+    font-size: var(--font-size-xs);
+  }
+  
+  .row-header {
+    min-width: 30px;
+    width: 30px;
+  }
+}
